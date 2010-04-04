@@ -9,10 +9,30 @@ AppsRequest appsRequest = AppsRequest.newBuilder()
 session.append(imgReq, new Callback<GetImageResponse>() {
          @Override
                                 public void onResult(ResponseContext context, GetAppsResponse response) {
-
+// Your code here
                         }                       
 });
 }}}
+
+This is what you can get from a search query :
+{
+  "app": [
+    {
+      "rating": "4.642857142857143",
+      "title": "Ruboto IRB",
+      "ratingsCount": 14,
+      "creator": "Jan Berkel",
+      "appType": "APPLICATION",
+      "id": "9089465703133677000",
+      "packageName": "org.jruby.ruboto.irb",
+      "version": "0.1",
+      "versionCode": 1,
+      "creatorId": "\"Jan Berkel\"",
+      "ExtendedInfo": {
+        "category": "Tools",
+        "permissionId": [
+...
+
 
 You can search by package using :
 {{{
