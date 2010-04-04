@@ -12,13 +12,16 @@ session.append(imgReq, new Callback<GetImageResponse>() {
 
                         }                       
 });
+}}}
 
 You can search by package using :
 {{{
 String query = "pname:<package>";
 }}}
+
 By developper name :
 {{{
-String query = "pub:<package>";
+String query = "pub:<name>";
 }}}
+
 Check out the [http://developer.android.com/guide/publishing/publishing.html Official Android Doc] (?q=xxxx)
