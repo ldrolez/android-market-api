@@ -1,0 +1,14 @@
+{{{
+ CommentsRequest commentsRequest = CommentsRequest.newBuilder()
+                                .setAppId("7065399193137006744")
+                                .setStartIndex(0)
+                                .setEntriesCount(10)
+                                .build();
+          
+ session.append(commentsRequest, new Callback<GetCommentsResponse>() {
+  @Override
+                                public void onResult(ResponseContext context, GetCommentsResponse response) {
+                                        System.out.println("Response : " + response);
+                                }
+});
+}}}
