@@ -1,0 +1,24 @@
+{{{
+String query = "maps";
+AppsRequest appsRequest = AppsRequest.newBuilder()
+                                .setQuery(query)
+                                .setStartIndex(0).setEntriesCount(10)
+                                .setWithExtendedInfo(true)
+                                .build();
+                       
+session.append(imgReq, new Callback<GetImageResponse>() {
+         @Override
+                                public void onResult(ResponseContext context, GetAppsResponse response) {
+
+                        }                       
+});
+
+You can search by package using :
+{{{
+String query = "pname:<package>";
+}}}
+By developper name :
+{{{
+String query = "pub:<package>";
+}}}
+Check out the [http://developer.android.com/guide/publishing/publishing.html Official Android Doc] (?q=xxxx)
