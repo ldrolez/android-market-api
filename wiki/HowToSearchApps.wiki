@@ -15,6 +15,7 @@ session.append(imgReq, new Callback<GetImageResponse>() {
 }}}
 
 This is what you can get from a search query :
+{{{
 {
   "app": [
     {
@@ -32,7 +33,7 @@ This is what you can get from a search query :
         "category": "Tools",
         "permissionId": [
 ...
-
+}}}
 
 You can search by package using :
 {{{
