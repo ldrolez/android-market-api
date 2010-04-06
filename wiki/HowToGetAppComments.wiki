@@ -9,6 +9,9 @@
   @Override
     public void onResult(ResponseContext context, CommentsResponse response) {
         System.out.println("Response : " + response);
+        // response.getComments(0).getAuthorName()
+        // response.getComments(0).getCreationTime()
+        // ...
     }
 });
 
