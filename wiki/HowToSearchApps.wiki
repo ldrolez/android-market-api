@@ -6,7 +6,7 @@ AppsRequest appsRequest = AppsRequest.newBuilder()
                                 .setWithExtendedInfo(true)
                                 .build();
                        
-session.append(imgReq, new Callback<GetImageResponse>() {
+session.append(appsRequest, new Callback<GetImageResponse>() {
          @Override
          public void onResult(ResponseContext context, GetAppsResponse response) {
                   // Your code here
