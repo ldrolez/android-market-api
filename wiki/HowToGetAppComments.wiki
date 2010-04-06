@@ -7,9 +7,9 @@
           
  session.append(commentsRequest, new Callback<CommentsResponse>() {
   @Override
-                                public void onResult(ResponseContext context, CommentsResponse response) {
-                                        System.out.println("Response : " + response);
-                                }
+    public void onResult(ResponseContext context, CommentsResponse response) {
+        System.out.println("Response : " + response);
+    }
 });
 
 session.flush();
