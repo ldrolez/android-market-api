@@ -8,9 +8,11 @@ AppsRequest appsRequest = AppsRequest.newBuilder()
                        
 session.append(imgReq, new Callback<GetImageResponse>() {
          @Override
-                                public void onResult(ResponseContext context, GetAppsResponse response) {
-// Your code here
-                        }                       
+         public void onResult(ResponseContext context, GetAppsResponse response) {
+                  // Your code here
+                  // response.getApp(0).getCreator() ...
+                  // see GetAppsResponse class definition for more infos
+         }
 });
 }}}
 
