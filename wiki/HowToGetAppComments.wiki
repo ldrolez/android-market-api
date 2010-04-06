@@ -5,9 +5,9 @@
                                 .setEntriesCount(10)
                                 .build();
           
- session.append(commentsRequest, new Callback<GetCommentsResponse>() {
+ session.append(commentsRequest, new Callback<CommentsResponse>() {
   @Override
-                                public void onResult(ResponseContext context, GetCommentsResponse response) {
+                                public void onResult(ResponseContext context, CommentsResponse response) {
                                         System.out.println("Response : " + response);
                                 }
 });
