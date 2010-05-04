@@ -10,3 +10,7 @@ to fetch a list of entries, you have to do multiple queries :
   * startIndex=10, count=10
   * startIndex=20, count=10
   * ...
+
+== How can i download the app ? ==
+
+Not supported for now, shouldn't be too hard, feel free to contribute if you can
