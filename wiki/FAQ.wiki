@@ -14,3 +14,7 @@ to fetch a list of entries, you have to do multiple queries :
 == How can i download the app ? ==
 
 Not supported for now, shouldn't be too hard, feel free to contribute if you can
+
+== App missing in the search result ==
+
+Some users reported that you have to set the android Id to see copy protected apps.
