@@ -1,0 +1,5 @@
+== Server return a 400 Bad Request ==
+
+  * Some request parameters are incorrect. For example you can't query more than 10 results par request. If you try to setResultCount(11), you'll get a HTTP 400 Error.
+
+  * You are doing to many request, try putting some Thread.sleep and check if the problem persist.
