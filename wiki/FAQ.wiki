@@ -6,7 +6,7 @@
 
 entriescount must be less or equals 10
 to fetch a list of entries, you have to do multiple queries :
-startIndex=0, count=10
-startIndex=10, count=10
-startIndex=20, count=10
-...
+  * startIndex=0, count=10
+  * startIndex=10, count=10
+  * startIndex=20, count=10
+  * ...
