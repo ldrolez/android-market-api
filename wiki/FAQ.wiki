@@ -17,4 +17,11 @@ Not supported for now, shouldn't be too hard, feel free to contribute if you can
 
 == App missing in the search result ==
 
-Some users reported that you have to set the android Id to see copy protected apps.
+Some users reported that you have to set the android Id to see copy protected apps. See google groups about this topic.
+
+== How can i get the whole list of apps ==
+
+Looks like google is trying to prevent this :
+- startIndex cannot be over 800 or so
+- resultCount cannot be over 10
+- if you make too many request, you'll get HTTP 400 error
