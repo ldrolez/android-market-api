@@ -24,4 +24,4 @@ Some users reported that you have to set the android Id to see copy protected ap
 Looks like google is trying to prevent this :
   * startIndex cannot be over 800 or so
   * resultCount cannot be over 10
-  * if you do too many request, you'll get HTTP 400 error
+  * if you do too many request, you'll get HTTP 400 error. This is a google market server protection, there is nothing this library can do about it : use multiple google accounts with multiple IP
