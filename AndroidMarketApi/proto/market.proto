@@ -164,8 +164,8 @@ message GetImageResponse {
 }
 
 message GetAssetResponse {
-       repeated group InstallAsset installAssets = 1 {
-      	       optional string assetId = 2;
+    repeated group InstallAsset = 1 {
+               optional string assetId = 2;
                optional string assetName = 3;
                optional string assetType = 4;
                optional string assetPackage = 5;
