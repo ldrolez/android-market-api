@@ -16,6 +16,13 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.zip.GZIPInputStream;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
 import com.gc.android.market.api.model.Market.AppsRequest;
 import com.gc.android.market.api.model.Market.AppsResponse;
 import com.gc.android.market.api.model.Market.CategoriesRequest;
@@ -30,14 +37,18 @@ import com.gc.android.market.api.model.Market.RequestContext;
 import com.gc.android.market.api.model.Market.Response;
 import com.gc.android.market.api.model.Market.Response.ResponseGroup;
 import com.gc.android.market.api.model.Market.ResponseContext;
+import com.gc.android.market.api.model.Market.GetAssetRequest;
+import com.gc.android.market.api.model.Market.GetAssetResponse;;
 
 /**
  * MarketSession session = new MarketSession();
- * session.login(login,password);
+ * session.login(login,password, androidId);
+ * For asyncronous calls use append, callback and flush
  * session.append(xxx,yyy);
  * session.append(xxx,yyy);
  * ...
  * session.flush();
+ *  For syncronous call, use the specific method
  */
 public class MarketSession {
 	
@@ -45,22 +56,26 @@ public class MarketSession {
 		
 		public void onResult(ResponseContext context, T response);
 	}
+	/*
+	 * SERVICE : Service required to the market. 
+	 * Default value: android. This service must be used to query info to the Market
+	 * androidsecure: This service must be used to download apps
+	 * sierra (checkout): This service must be used for checkout (at moment unused)
+	 */
 
-	public static final String SERVICE = "android";
-	// androidsecure
-	// sierra (checkout)
+	public String SERVICE = "android";
+
 	private static final String URL_LOGIN = "https://www.google.com/accounts/ClientLogin";
 	public static final String ACCOUNT_TYPE_GOOGLE = "GOOGLE";
 	public static final String ACCOUNT_TYPE_HOSTED = "HOSTED";
 	public static final String ACCOUNT_TYPE_HOSTED_OR_GOOGLE = "HOSTED_OR_GOOGLE";
-	
 	public static final int PROTOCOL_VERSION = 2;
 	Request.Builder request = Request.newBuilder();
 	RequestContext.Builder context = RequestContext.newBuilder();
 	public RequestContext.Builder getContext() {
 		return context;
 	}
-
+	
 	List<Callback<?>> callbacks = new Vector<Callback<?>>(); 
 	String authSubToken = null;
 	
@@ -68,14 +83,19 @@ public class MarketSession {
 		return authSubToken;
 	}
 
-	public MarketSession() {
-		context.setUnknown1(0);
-		context.setVersion(1002012);
-		context.setAndroidId("0123456789123456");
-		//context.setAndroidId( hexadecimal(0123132123123113213).toLowerCase());
+	/*
+	 * Login must set isSecure to false for list and download
+	 */
+	public MarketSession(Boolean isSecure) {
+		setIsSecure(false);
 		setLocale(Locale.getDefault());
-		context.setDeviceAndSdkVersion("crespo:7");
 		setOperatorTMobile();
+		context.setVersion(2009011);		
+		context.setDeviceAndSdkVersion("passion:9");
+	    if (isSecure)
+	        SERVICE = "androidsecure";
+	    else 
+	        SERVICE = "android";
 	}
 	
 	public void setLocale(Locale locale) {
@@ -121,15 +141,29 @@ public class MarketSession {
 		context.setAuthSubToken(authSubToken);
 		this.authSubToken = authSubToken; 
 	}
-
-	public void login(String email, String password) {
-		this.login(email, password,ACCOUNT_TYPE_HOSTED_OR_GOOGLE);
+	
+	public void setIsSecure(Boolean isSecure) {
+		context.setIsSecure(isSecure);
 	}
 	
-	public void login(String email, String password, String accountType) {
+	public void setAndroidId(String androidId) {
+		context.setAndroidId(androidId);
+	}
+	
+	
+	public void login(String email, String password, String androidId) {
+		this.login(email, password, androidId, ACCOUNT_TYPE_HOSTED_OR_GOOGLE);
+	}
+	
+	public void login(String email, String password, String androidId,
+			String accountType) {
+		//Android ID must an unique identifier associated to the account 
+		//used in in the login
+		setAndroidId(androidId);
 		Map<String,String> params = new LinkedHashMap<String,String>();
 		params.put("Email", email);
 		params.put("Passwd", password);
+		
 		params.put("service", SERVICE);
 	//	params.put("source", source);
 		params.put("accountType", accountType);
@@ -191,6 +225,41 @@ public class MarketSession {
 		}
 		return retList;
 	}
+	public CategoriesResponse queryCategories() {
+		RequestContext ctxt = context.build();
+		context = RequestContext.newBuilder(ctxt);
+		request.setContext(ctxt);
+		CategoriesResponse categoriesResponse = null;
+		try {
+			Response response = executeProtobuf(request.addRequestGroup(
+					RequestGroup.newBuilder().setCategoriesRequest(
+							CategoriesRequest.newBuilder().build())).setContext(ctxt).build());
+			categoriesResponse = response.getResponseGroup(0).getCategoriesResponse();
+		} finally {
+			request = Request.newBuilder();;
+		}
+		return categoriesResponse;
+	}	
+
+	public GetAssetResponse queryGetAssetRequest(String assetId){
+	    setIsSecure(true);
+	    RequestContext ctxt = context.build();
+	    context = RequestContext.newBuilder(ctxt);
+	    request.setContext(ctxt);
+	    GetAssetResponse assetResponse = null;
+	    try {
+	        Response response = executeProtobuf(request.addRequestGroup(
+	                    RequestGroup.newBuilder().setGetAssetRequest(
+	                    GetAssetRequest.newBuilder().setAssetId(
+	                    assetId).build())).setContext(ctxt).build());
+	        assetResponse = response.getResponseGroup(0).getGetAssetResponse();
+	    } finally {
+	        setIsSecure(false);
+	        request = Request.newBuilder(); 
+	    }
+	    return assetResponse; 
+	}
+	
 	
 	public void append(AppsRequest requestGroup, Callback<AppsResponse> responseCallback) {
 		request.addRequestGroup(RequestGroup.newBuilder().setAppsRequest(requestGroup));
@@ -249,12 +318,13 @@ public class MarketSession {
 	
 	private Response executeProtobuf(Request request) {
 		byte[] requestBytes = request.toByteArray();
-		byte[] responseBytes = executeRawHttpQuery(requestBytes);
+		byte[] responseBytes = null;		
 		try {
+		    if (!context.getIsSecure())
+		        responseBytes = executeRawHttpQuery(requestBytes);
+		    else 
+		        responseBytes = executeRawHttpsQuery(requestBytes);
 			Response r = Response.parseFrom(responseBytes);
-//			for(Entry<Integer,UnknownFieldSet.Field> o : r.getUnknownFields().asMap().entrySet()) {
-//				System.out.println(o.getKey() + "=" + o.getValue());
-//			}
 			return r;
 		} catch(Exception ex) {
 			throw new RuntimeException(ex);
@@ -306,4 +376,76 @@ public class MarketSession {
 			throw new RuntimeException(ex);
 		}
 	}
+    private Boolean trustAll() {
+        TrustManager[] trustAllCerts = new TrustManager[]{
+                new X509TrustManager() {
+                    public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                        return null;
+                    }
+                    public void checkClientTrusted(
+                        java.security.cert.X509Certificate[] certs, String authType) {
+                    }
+                    public void checkServerTrusted(
+                        java.security.cert.X509Certificate[] certs, String authType) {
+                    }
+                }
+            };
+        try {
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+            HttpsURLConnection.setDefaultHostnameVerifier( new HostnameVerifier()
+            {
+                public boolean verify(String arg0, SSLSession arg1) {
+                    return true;
+                }
+            }
+            ); 
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    private byte[] executeRawHttpsQuery(byte[] request){
+        if (request == null)
+            return null;        
+        if (!trustAll())
+            return null;
+        try {
+            URL url = new URL("https://android.clients.google.com/market/api/ApiRequest");
+            HttpsURLConnection cnx = (HttpsURLConnection)url.openConnection();
+            cnx.setDoOutput(true);
+            cnx.setRequestMethod("POST");
+            cnx.setRequestProperty("Cookie","ANDROIDSECURE=" + this.getAuthSubToken());
+            cnx.setRequestProperty("User-Agent", "Android-Market/2 (sapphire PLAT-RC33); gzip");
+            cnx.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            cnx.setRequestProperty("Accept-Charset","ISO-8859-1,utf-8;q=0.7,*;q=0.7");
+            String request64 = Base64.encodeBytes(request,Base64.URL_SAFE);
+            String requestData = "version="+PROTOCOL_VERSION+"&request="+request64;
+            cnx.setFixedLengthStreamingMode(requestData.getBytes("UTF-8").length);
+            OutputStream os = cnx.getOutputStream();
+            os.write(requestData.getBytes());
+            os.close();
+            if(cnx.getResponseCode() >= 400) {
+                cnx.disconnect();
+                throw new IOException("Response code = " + cnx.getResponseCode() + 
+                        ", msg = " + cnx.getResponseMessage());
+            }
+            InputStream is = cnx.getInputStream();
+            GZIPInputStream gzIs = new GZIPInputStream(is);
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            byte[] buff = new byte[1024];
+            while(true) {
+                int nb = gzIs.read(buff);
+                if(nb < 0)
+                    break;
+                bos.write(buff,0,nb);
+            }
+            is.close();
+            cnx.disconnect();
+            return bos.toByteArray();
+      } catch(Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }       	
 }
