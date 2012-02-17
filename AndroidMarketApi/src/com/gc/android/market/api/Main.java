@@ -36,7 +36,7 @@ public class Main {
 			String login = args[0];
 			String password = args[1];
 			String androidId = args[2];
-			String query = args.length > 3 ? args[4] : "Test";
+			String query = args.length > 3 ? args[3] : "Test";
 			//testAsyncronousCalls(login, password, androidId, query);
 			//testSyncronousCalls(login, password, androidId);
 			String assetId = "-8293098835483019876";
@@ -137,7 +137,7 @@ public class Main {
     {
         try {
         MarketSession session = new MarketSession(true);
-        session.setIsSecure(true);
+
         System.out.println("Login...");
         session.login(login,password, androidId);
         System.out.println("Login done");
