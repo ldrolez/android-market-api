@@ -6,8 +6,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.InputStream;
 
-import com.gc.android.market.api.Base64.InputStream;
 import com.gc.android.market.api.MarketSession.Callback;
 import com.gc.android.market.api.model.Market.AppType;
 import com.gc.android.market.api.model.Market.AppsRequest;
@@ -39,7 +39,7 @@ public class Main {
 			String query = args.length > 3 ? args[3] : "Test";
 			//testAsyncronousCalls(login, password, androidId, query);
 			//testSyncronousCalls(login, password, androidId);
-			String assetId = "-8293098835483019876";
+			String assetId = "4844902034229958816";
 			testDownload(login, password, androidId, assetId);
         } catch (Exception ex) {
             ex.printStackTrace();
