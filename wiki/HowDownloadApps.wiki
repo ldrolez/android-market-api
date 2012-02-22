@@ -21,7 +21,9 @@ Step to download apps:
         conn.setRequestMethod("GET");
         conn.setRequestProperty("User-Agent", "Android-Market/2 (sapphire PLAT-RC33); gzip");
         conn.setRequestProperty("Cookie", cookieName + "=" + cookieValue);
-
+}}}
+ # Save the stream onto filesystem
+{{{
         InputStream inputstream =  (InputStream) conn.getInputStream();
         String fileToSave = assetId + ".apk";
         System.out.println("Downloading " + fileToSave);
@@ -31,8 +33,5 @@ Step to download apps:
         for(long l = 0L; (k = inputstream.read(buf)) != -1; l += k )
             stream.write(buf, 0, k);
         inputstream.close();
-        stream.close();
-        } catch(Exception ex) {
-            ex.printStackTrace();
-        }       
+        stream.close();  
 }}}
