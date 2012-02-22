@@ -87,15 +87,15 @@ public class MarketSession {
 	 * Login must set isSecure to false for list and download
 	 */
 	public MarketSession(Boolean isSecure) {
-		setIsSecure(false);
-		setLocale(Locale.getDefault());
-		setOperatorTMobile();
-		context.setVersion(2009011);		
-		context.setDeviceAndSdkVersion("passion:9");
-	    if (isSecure)
-	        SERVICE = "androidsecure";
-	    else 
-	        SERVICE = "android";
+        if (isSecure)
+            SERVICE = "androidsecure";
+        else 
+            SERVICE = "android";
+        context.setIsSecure(false);
+        context.setVersion(2009011);
+        setLocale(Locale.getDefault());
+        context.setDeviceAndSdkVersion("passion:9");
+        setOperatorTMobile();
 	}
 	
 	public void setLocale(Locale locale) {
@@ -180,7 +180,7 @@ public class MarketSession {
 				}
 			}
 			if(authKey == null)
-				throw new RuntimeException("authKey not found in "+data);
+				throw new RuntimeException("authKey not found in "+ data);
 
 			setAuthSubToken(authKey);
 		} catch(Tools.HttpException httpEx) {
@@ -225,6 +225,7 @@ public class MarketSession {
 		}
 		return retList;
 	}
+	
 	public CategoriesResponse queryCategories() {
 		RequestContext ctxt = context.build();
 		context = RequestContext.newBuilder(ctxt);
