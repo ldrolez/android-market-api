@@ -9,8 +9,6 @@ Main target is java but it can be easily adapted to other languages since it's [
 
 There is a Ruby port by jberkel [here](http://github.com/jberkel/supermarket) and a PHP port by splitfeed [here](http://code.google.com/p/android-market-api-php/). These is also a crawler on top of this library by Raunak Gupta [here](https://code.google.com/p/android-marketplace-crawler/).
 
-For any help using this API please use the google group [HERE](http://groups.google.com/group/android-market-api), no direct help request please, i won't answer.
-
 
 ## Requirement ##
 No specific requirement, it use java.net.URL for communication with the google market server, that's all. So it should run without problem on Google App Engine or in an Android app.
