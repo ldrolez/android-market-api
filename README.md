@@ -66,7 +66,7 @@ session.flush();
 
 Check out how to :
   * [HowToSearchApps](HowToSearchApps.md)
-  * [HowToGetAppComments](HowToGetAppComments.md)
+  * [HowToGetAppComments](HowToGetAppsComments.md)
   * [HowToGetAppScreenshot](HowToGetAppScreenshot.md)
 
 ## How can i help ? ##
