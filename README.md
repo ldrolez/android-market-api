@@ -7,7 +7,7 @@ This library allow you to ask directly google's official android market servers 
 
 Main target is java but it can be easily adapted to other languages since it's [Google ProtoBuf](https://code.google.com/p/protobuf/) based.
 
-There is a Ruby port by jberkel [here](http://github.com/jberkel/supermarket) and a PHP port by splitfeed [here](http://code.google.com/p/android-market-api-php/). These is also a crawler on top of this library by Raunak Gupta [here](https://code.google.com/p/android-marketplace-crawler/).
+There is a Ruby port by jberkel [here](http://github.com/jberkel/supermarket) and a PHP port by splitfeed [here](https://github.com/koconder/android-market-api-php). These is also a crawler on top of this library by Raunak Gupta [here](https://code.google.com/p/android-marketplace-crawler/).
 
 
 ## Requirement ##
